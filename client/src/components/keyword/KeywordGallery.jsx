@@ -21,9 +21,9 @@ function KeywordGallery() {
   // Process the keywords into required format
 
   const keywordsExample = [
-    { id: "CNN", name: "economics", numArticles: 5, bias: "center" },
-    { id: "BBC", name: "finance", numArticles: 15, bias: "right" },
-    { id: "CNBC", name: "law", numArticles: 35, bias: "left" },
+    { id: "economy", name: "economics", numArticles: 5, bias: "center" },
+    { id: "finance", name: "finance", numArticles: 15, bias: "right" },
+    { id: "law", name: "law", numArticles: 35, bias: "left" },
   ];
 
   return (
