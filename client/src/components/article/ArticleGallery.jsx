@@ -4,7 +4,6 @@ import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import ArticleCard from "./ArticleCard";
 import { SimpleGrid } from "@chakra-ui/react";
-// import { getContact } from "../contacts";
 
 export function loader({ params }) {
   const articleId = params.articlesId;
@@ -19,6 +18,7 @@ function Article({ params }) {
 
   const dummyArticles = [
     {
+      id: 1,
       title: "economix article 1",
       text: "lorem ipsum dolor",
       bias: 0,
@@ -26,6 +26,7 @@ function Article({ params }) {
       cluster_tags: [1, 2, 7],
     },
     {
+      id: 2,
       title: "economix article 2",
       text: "lorem ipsum dolor yummy bad",
       bias: 1,
@@ -33,6 +34,7 @@ function Article({ params }) {
       cluster_tags: [1, 4, 8],
     },
     {
+      id: 3,
       title: "law article",
       text: "lorem ipsum dolores",
       bias: 3,
@@ -64,6 +66,7 @@ function Article({ params }) {
       >
         {articles.map((article) => (
           <ArticleCard
+            articleId={article.id}
             title={article.title}
             text={article.text}
             bias={article.bias}
