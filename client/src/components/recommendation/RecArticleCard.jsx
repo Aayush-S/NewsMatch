@@ -13,7 +13,9 @@ import {
   LinkOverlay,
 } from "@chakra-ui/react";
 
-function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
+function RecArticleCard({ articleId, title, text, bias, keywords }) {
+  console.log(title);
+  console.log(keywords);
   const cardColors = {
     0: "#4B3CE1",
     1: "#8379E0",
@@ -52,4 +54,4 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
   );
 }
 
-export default ArticleCard;
+export default RecArticleCard;
