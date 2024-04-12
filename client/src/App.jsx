@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import Home from "./components/home/Home";
 import KeywordGallery from "./components/keyword/KeywordGallery";
+import SubmitArticle from "./components/submitArticle/SubmitArticle";
 import ArticleGallery, {
   loader as articleLoader,
 } from "./components/article/ArticleGallery";
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path: "/submitArticle",
+    element: <SubmitArticle />,
   },
   {
     path: "/keyword",
