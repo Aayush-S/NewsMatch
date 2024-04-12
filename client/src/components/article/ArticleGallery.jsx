@@ -4,7 +4,6 @@ import axios from "axios";
 import { useLoaderData } from "react-router-dom";
 import ArticleCard from "./ArticleCard";
 import { SimpleGrid } from "@chakra-ui/react";
-// import { getContact } from "../contacts";
 
 export function loader({ params }) {
   const articleId = params.articlesId;

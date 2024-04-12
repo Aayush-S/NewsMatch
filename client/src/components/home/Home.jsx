@@ -9,7 +9,11 @@ function Home() {
     <>
       <h1>Political Bias Recommendation System</h1>
       <ChakraLink color="teal.500" as={ReactRouterLink} to={`/keyword`}>
-        Get Started
+        Select from our Corpus
+      </ChakraLink>
+      <br />
+      <ChakraLink color="teal.500" as={ReactRouterLink} to={`/submitArticle`}>
+        Submit Custom Article
       </ChakraLink>
     </>
   );

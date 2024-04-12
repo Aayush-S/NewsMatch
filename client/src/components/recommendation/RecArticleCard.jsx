@@ -14,8 +14,6 @@ import {
 } from "@chakra-ui/react";
 
 function RecArticleCard({ articleId, title, text, bias, keywords }) {
-  console.log(title);
-  console.log(keywords);
   const cardColors = {
     0: "#4B3CE1",
     1: "#8379E0",
