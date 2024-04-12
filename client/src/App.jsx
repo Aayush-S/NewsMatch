@@ -9,6 +9,10 @@ import ArticleGallery, {
   loader as articleLoader,
 } from "./components/article/ArticleGallery";
 
+import RecommendationGallery, {
+  loader as recommendationLoader,
+} from "./components/recommendation/RecommendationGallery";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,6 +26,12 @@ const router = createBrowserRouter([
     path: "/articles/:articlesId",
     element: <ArticleGallery />,
     loader: articleLoader,
+  },
+
+  {
+    path: "/recommendation/:articleId",
+    element: <RecommendationGallery />,
+    loader: recommendationLoader,
   },
 ]);
 
