@@ -28,6 +28,11 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
     3: "center-right",
     4: "right",
   };
+
+  // Convert keyword string into list
+  keywords = keywords.replace(/'/g, '"');
+  keywords = JSON.parse(keywords);
+
   return (
     <>
       <LinkBox as="article" maxW="sm" p="2" borderWidth="0px" rounded="md">

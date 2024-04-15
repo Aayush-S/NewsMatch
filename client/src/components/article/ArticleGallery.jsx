@@ -11,51 +11,17 @@ export function loader({ params }) {
 }
 
 function Article({ params }) {
-  const [articles, setArticles] = useState([]);
+  const [articles, setArticles] = useState(null);
 
   const articleId = useLoaderData();
-  console.log(articleId);
-
-  const dummyArticles = [
-    {
-      id: 1,
-      title: "economix article 1",
-      text: "lorem ipsum dolor",
-      bias: 0,
-      keywords: ["taxes", "fed", "monetary", "policy", "economy"],
-      cluster_tags: [1, 2, 7],
-    },
-    {
-      id: 2,
-      title: "economix article 2",
-      text: "lorem ipsum dolor yummy bad",
-      bias: 1,
-      keywords: ["science", "economy", "stocks", "bubble", "money"],
-      cluster_tags: [1, 4, 8],
-    },
-    {
-      id: 3,
-      title: "law article",
-      text: "lorem ipsum dolores",
-      bias: 3,
-      keywords: ["law", "supreme", "court", "policy", "fraud"],
-      cluster_tags: [3, 5, 7],
-    },
-  ];
 
   useEffect(() => {
-    // TODO: Need API route to GET by articleId
-    // axios.get("http://127.0.0.1:5000/embeddings").then((response) => {
-    //   console.log("hello");
-    //   const res = response.data;
-    //   console.log(res);
-    //   setEmbeddings(res);
-    // });
-    // setArticles()
-    const keywordArticles = dummyArticles.filter((article) =>
-      article.keywords.includes(articleId)
-    );
-    setArticles(keywordArticles);
+    axios
+      .get(`http://127.0.0.1:5000/articles/${articleId}`)
+      .then((response) => {
+        const res = response.data;
+        setArticles(res);
+      });
   }, []);
 
   return (
@@ -64,16 +30,17 @@ function Article({ params }) {
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
       >
-        {articles.map((article) => (
-          <ArticleCard
-            articleId={article.id}
-            title={article.title}
-            text={article.text}
-            bias={article.bias}
-            keywords={article.keywords}
-            cluster_tags={article.cluster_tags}
-          />
-        ))}
+        {articles &&
+          articles.map((article, i) => (
+            <ArticleCard
+              articleId={i}
+              title={article.Title}
+              text={article.Text.substring(0, 50)}
+              bias={article.Bias}
+              keywords={article.Keywords}
+              cluster_tags={article["Cluster Tags"]}
+            />
+          ))}
       </SimpleGrid>
     </div>
   );
