@@ -25,7 +25,7 @@ function Article({ params }) {
   }, []);
 
   return (
-    <div>
+    <>
       <SimpleGrid
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
@@ -41,9 +41,8 @@ function Article({ params }) {
               cluster_tags={article["Cluster Tags"]}
             />
           ))}
-
       </SimpleGrid>
-    </div>
+    </>
   );
 }
 
