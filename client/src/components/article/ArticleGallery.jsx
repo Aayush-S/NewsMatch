@@ -41,6 +41,7 @@ function Article({ params }) {
               cluster_tags={article["Cluster Tags"]}
             />
           ))}
+
       </SimpleGrid>
     </div>
   );
