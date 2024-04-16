@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import Home from "./components/home/Home";
-import KeywordGallery from "./components/keyword/KeywordGallery";
+import ClusterGallery from "./components/cluster/ClusterGallery";
 import SubmitArticle from "./components/submitArticle/SubmitArticle";
 import ArticleGallery, {
   loader as articleLoader,
@@ -24,8 +24,8 @@ const router = createBrowserRouter([
     element: <SubmitArticle />,
   },
   {
-    path: "/keyword",
-    element: <KeywordGallery />,
+    path: "/cluster",
+    element: <ClusterGallery />,
   },
   {
     path: "/articles/:articlesId",

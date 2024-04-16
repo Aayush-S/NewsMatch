@@ -16,7 +16,7 @@ import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function KeywordGallery() {
+function ClusterGallery() {
   // API Call to get keywords
   // Process the keywords into required format
 
@@ -61,4 +61,4 @@ function KeywordGallery() {
   );
 }
 
-export default KeywordGallery;
+export default ClusterGallery;

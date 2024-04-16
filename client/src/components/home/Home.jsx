@@ -8,7 +8,7 @@ function Home() {
   return (
     <>
       <h1>Political Bias Recommendation System</h1>
-      <ChakraLink color="teal.500" as={ReactRouterLink} to={`/keyword`}>
+      <ChakraLink color="teal.500" as={ReactRouterLink} to={`/cluster`}>
         Select from our Corpus
       </ChakraLink>
       <br />
