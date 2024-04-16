@@ -69,26 +69,56 @@ def get_articles_in_cluster(clusterId=0):
 
     return jsonify([dict(article) for article in articles])
 
+
+# GET Articles of a given cluster by name of the tag
+@app.route('/articles/<clusterId>')
+@cross_origin()
+def get_articles_in_cluster(clusterId=0, limit=10):
+
+    print(clusterId)
+
+    conn = get_db_connection()
+    conn = conn.cursor()
+    # conn.execute("SELECT * FROM articles")
+    conn.execute(
+        f"""SELECT *
+            FROM articles
+            WHERE [Cluster Tags] REGEXP '\\b{clusterId}\\b';"""
+    )
+    articles = conn.fetchall()
+    conn.close()
+
+    return jsonify([dict(article) for article in articles])
+
+
 # GET histogram
 @app.route('/histogram')
 @cross_origin()
 def get_histogram_data():
-    cluster_tags = [
-        "Political and Social Issues",
-        "Community Involvement",
-        "Names, Organizations, and Various Terms",
-        "Locations",
-        "Misc. Adjectives",
-        "Legal and Law Enforcement",
-        "Science and Medicine",
-        "Noise/Nonsensical Phrases",
-        "Media and Entertainment",
-        "Various Phrases/Verbs",
-        "Nature and Wildlife",
-        "Food",
-        "Finance and Economics",
-        "Objects and Accessories",
-    ]
+    # cluster_tags = [
+    #     "Political and Social Issues",
+    #     "Community Involvement",
+    #     "Names, Organizations, and Various Terms",
+    #     "Locations",
+    #     "Misc. Adjectives",
+    #     "Legal and Law Enforcement",
+    #     "Science and Medicine",
+    #     "Noise/Nonsensical Phrases",
+    #     "Media and Entertainment",
+    #     "Various Phrases/Verbs",
+    #     "Nature and Wildlife",
+    #     "Food",
+    #     "Finance and Economics",
+    #     "Objects and Accessories",
+    # ]
+    conn = sqlite3.connect('first_2000.db')
+    conn = conn.cursor()
+    conn.execute(
+        """
+        SELECT cluster_name from clusters;"""
+    )
+    cluster_tags = conn.fetchall()
+    
 
     # this one uses small.db, created this from shell
     '''
@@ -100,8 +130,8 @@ def get_histogram_data():
     .quit
     '''
 
-    conn = sqlite3.connect('small.db')
-    conn = conn.cursor()
+    # conn = sqlite3.connect('small.db')
+    # conn = conn.cursor()
     histogram_data = []
     for tag in cluster_tags:
         like_tag = "%" + tag + "%"
