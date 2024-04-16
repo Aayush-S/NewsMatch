@@ -69,5 +69,54 @@ def get_articles_in_cluster(clusterId=0):
 
     return jsonify([dict(article) for article in articles])
 
+# GET histogram
+@app.route('/histogram')
+@cross_origin()
+def get_histogram_data():
+    cluster_tags = [
+        "Political and Social Issues",
+        "Community Involvement",
+        "Names, Organizations, and Various Terms",
+        "Locations",
+        "Misc. Adjectives",
+        "Legal and Law Enforcement",
+        "Science and Medicine",
+        "Noise/Nonsensical Phrases",
+        "Media and Entertainment",
+        "Various Phrases/Verbs",
+        "Nature and Wildlife",
+        "Food",
+        "Finance and Economics",
+        "Objects and Accessories",
+    ]
+
+    # this one uses small.db, created this from shell
+    '''
+    sqlite3 small.db
+    .mode csv articles
+    .import clustered_articles_small.csv articles  # this is the first 2000 rows of large csv
+    .tables  # prints 'articles'
+    .schema  # also gives more info
+    .quit
+    '''
+
+    conn = sqlite3.connect('small.db')
+    conn = conn.cursor()
+    histogram_data = []
+    for tag in cluster_tags:
+        like_tag = "%" + tag + "%"
+        conn.execute("""
+            SELECT bias, count(*) AS article_count FROM articles 
+            WHERE [Cluster Tags] LIKE ?
+            """, (like_tag,))
+        cluster_data = conn.fetchall()
+        histogram_data.append({
+            "tag": tag,
+            "data": cluster_data
+        })
+    conn.close()
+
+    return jsonify(histogram_data)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
