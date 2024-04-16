@@ -13,6 +13,9 @@ import ArticleGallery, {
 import RecommendationGallery, {
   loader as recommendationLoader,
 } from "./components/recommendation/RecommendationGallery";
+import ArticleContent, {
+  loader as articleContentLoader,
+} from "./components/content/ArticleContent";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +40,11 @@ const router = createBrowserRouter([
     path: "/recommendation/:articleId",
     element: <RecommendationGallery />,
     loader: recommendationLoader,
+  },
+  {
+    path: "/article-content/:articleId",
+    element: <ArticleContent />,
+    loader: articleContentLoader,
   },
 ]);
 
