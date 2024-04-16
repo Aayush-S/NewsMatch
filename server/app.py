@@ -23,19 +23,6 @@ def get_db_connection():
 def home():
     return "Hello, World!"
 
-# Create dummy embeddings
-dummy_embeddings = {
-    'CNN': [0.1, 0.2, 0.3],
-    'Fox News': [0.4, 0.5, 0.6],
-    'BBC': [0.7, 0.8, 0.9],
-    'CNBC': [0.2, 0.8, 0.9]
-}
-
-@app.route('/embeddings')
-@cross_origin()
-def get_embeddings():
-    return jsonify(dummy_embeddings)
-
 @app.route('/articles')
 @cross_origin()
 def get_articles():
@@ -54,8 +41,6 @@ def get_articles():
 @cross_origin()
 def get_articles_in_cluster(clusterId=0):
 
-    print(clusterId)
-
     conn = get_db_connection()
     conn = conn.cursor()
     # conn.execute("SELECT * FROM articles")
@@ -70,25 +55,25 @@ def get_articles_in_cluster(clusterId=0):
     return jsonify([dict(article) for article in articles])
 
 
-# GET Articles of a given cluster by name of the tag
-@app.route('/articles/<clusterId>')
-@cross_origin()
-def get_articles_in_cluster(clusterId=0, limit=10):
+# # GET Articles of a given cluster by name of the tag
+# @app.route('/articles/<clusterId>')
+# @cross_origin()
+# def get_articles_in_cluster(clusterId=0, limit=10):
 
-    print(clusterId)
+#     print(clusterId)
 
-    conn = get_db_connection()
-    conn = conn.cursor()
-    # conn.execute("SELECT * FROM articles")
-    conn.execute(
-        f"""SELECT *
-            FROM articles
-            WHERE [Cluster Tags] REGEXP '\\b{clusterId}\\b';"""
-    )
-    articles = conn.fetchall()
-    conn.close()
+#     conn = get_db_connection()
+#     conn = conn.cursor()
+#     # conn.execute("SELECT * FROM articles")
+#     conn.execute(
+#         f"""SELECT *
+#             FROM articles
+#             WHERE [Cluster Tags] REGEXP '\\b{clusterId}\\b';"""
+#     )
+#     articles = conn.fetchall()
+#     conn.close()
 
-    return jsonify([dict(article) for article in articles])
+#     return jsonify([dict(article) for article in articles])
 
 
 # GET histogram
@@ -115,10 +100,10 @@ def get_histogram_data():
     conn = conn.cursor()
     conn.execute(
         """
-        SELECT cluster_name from clusters;"""
+        SELECT cluster_id, cluster_name from clusters;"""
     )
     cluster_tags = conn.fetchall()
-    
+    cluster_tags = [tag[1] for tag in cluster_tags[1:]]
 
     # this one uses small.db, created this from shell
     '''
@@ -134,10 +119,11 @@ def get_histogram_data():
     # conn = conn.cursor()
     histogram_data = []
     for tag in cluster_tags:
+        # print(tag[0])
         like_tag = "%" + tag + "%"
         conn.execute("""
             SELECT bias, count(*) AS article_count FROM articles 
-            WHERE [Cluster Tags] LIKE ?
+            WHERE [Cluster Tags] LIKE ? group by bias;
             """, (like_tag,))
         cluster_data = conn.fetchall()
         histogram_data.append({
