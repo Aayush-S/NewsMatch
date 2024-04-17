@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import _, { random } from "lodash";
 
 import { useLoaderData } from "react-router-dom";
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import RecArticleCard from "./RecArticleCard";
+import ArticleCard from "../article/ArticleCard";
 
 export function loader({ params }) {
   const articleId = params.articleId;
@@ -13,95 +14,34 @@ export function loader({ params }) {
 
 function RecommendationGallery({ params }) {
   const [selectedArticle, setSelectedArticle] = useState(null);
-  // {
-  //   id: -1,
-  //   title: "dummy",
-  //   text: "dummy text",
-  //   bias: 0,
-  //   keywords: ["d", "u", "m", "m", "y"],
-  //   cluster_tags: [1, 2, 3],
-  // }
-  // const [similarArticles, setSimilarArticles] = useState([]);
-  // const [differentArticles, setDifferentArticles] = useState([]);
+  const [similarArticles, setSimilarArticles] = useState([]);
+  const [differentArticles, setDifferentArticles] = useState([]);
 
   const articleId = useLoaderData();
-  //   console.log(articleId);
 
   useEffect(() => {
-    // TODO: Need API route to GET by articleId
-    // TODO: 2 API calls (or can maybe condense into 1 if smart about sending it)
-    // setArticles(keywordArticles);
-
     axios
       .get(`http://127.0.0.1:5000/articles/${articleId}`)
       .then((response) => {
         const res = response.data;
-        console.log(res);
         setSelectedArticle(res);
       });
 
     const clusterId = 0;
+    const biasLevel = 0;
 
     axios.get(`http://127.0.0.1:5000/bias/${clusterId}/5`).then((response) => {
       const res = response.data;
 
-      const similarArticles = [];
+      setSimilarArticles(res[biasLevel]);
 
-      // setData(res);
+      let randomDiffArticles = res;
+      delete randomDiffArticles[biasLevel];
+      randomDiffArticles = Object.values(randomDiffArticles).flat();
+      randomDiffArticles = _.sampleSize(randomDiffArticles, 5);
+
+      setDifferentArticles(randomDiffArticles);
     });
-    // const simArts = [
-    //   {
-    //     id: 1,
-    //     title: "economix article 1",
-    //     text: "lorem ipsum dolor",
-    //     bias: 0,
-    //     keywords: ["taxes", "fed", "monetary", "policy", "economy"],
-    //     cluster_tags: [1, 2, 7],
-    //   },
-    //   {
-    //     id: 2,
-    //     title: "economix article 2",
-    //     text: "lorem ipsum dolor yummy bad",
-    //     bias: 1,
-    //     keywords: ["science", "economy", "stocks", "bubble", "money"],
-    //     cluster_tags: [1, 4, 8],
-    //   },
-    // ];
-
-    // const diffArts = [
-    //   {
-    //     id: 4,
-    //     title: "easdfasdfasdfconomix article 1",
-    //     text: "lorem ipsum dolor",
-    //     bias: 0,
-    //     keywords: ["taxes", "fed", "monetary", "policy", "economy"],
-    //     cluster_tags: [1, 2, 7],
-    //   },
-    //   {
-    //     id: 5,
-    //     title: "economix asdfasdfarticle 2",
-    //     text: "lorem ipsum dolor yummy bad",
-    //     bias: 1,
-    //     keywords: ["science", "economy", "stocks", "bubble", "money"],
-    //     cluster_tags: [1, 4, 8],
-    //   },
-    // ];
-
-    // const selArt = {
-    //   id: 3,
-    //   title: "YOUR SELECTED ARTICLE",
-    //   text: "lorem ipsum dolor",
-    //   bias: 0,
-    //   keywords: ["taxes", "fed", "monetary", "policy", "economy"],
-    //   cluster_tags: [1, 2, 7],
-    // };
-
-    // setSimilarArticles(simArts);
-    // setDifferentArticles(diffArts);
-    // setSelectedArticle(selArt);
-
-    console.log("here");
-    console.log(selectedArticle);
   }, []);
 
   return (
@@ -110,20 +50,21 @@ function RecommendationGallery({ params }) {
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem w="100%" h="10">
           <h1>Similar Articles</h1>
-          {/* {similarArticles.map((article) => (
-            <RecArticleCard
-              articleId={article.id}
-              title={article.title}
-              text={article.text}
-              bias={article.bias}
-              keywords={article.keywords}
-            />
-          ))} */}
+          {similarArticles &&
+            similarArticles.map((article) => (
+              <ArticleCard
+                articleId={article.article_id}
+                title={article.Title}
+                text={article.Text}
+                bias={article.Bias}
+                keywords={article.Keywords}
+              />
+            ))}
         </GridItem>
         <GridItem w="100%" h="10">
           <h1>Selected Article</h1>
           {selectedArticle && (
-            <RecArticleCard
+            <ArticleCard
               articleId={selectedArticle.article_id}
               title={selectedArticle.Title}
               text={selectedArticle.Text}
@@ -134,15 +75,15 @@ function RecommendationGallery({ params }) {
         </GridItem>
         <GridItem w="100%" h="10">
           <h1>Different Articles</h1>
-          {/* {differentArticles.map((article) => (
-            <RecArticleCard
-              articleId={article.id}
-              title={article.title}
-              text={article.text}
-              bias={article.bias}
-              keywords={article.keywords}
+          {differentArticles.map((article) => (
+            <ArticleCard
+              articleId={article.article_id}
+              title={article.Title}
+              text={article.Text}
+              bias={article.Bias}
+              keywords={article.Keywords}
             />
-          ))} */}
+          ))}
         </GridItem>
       </Grid>
     </div>

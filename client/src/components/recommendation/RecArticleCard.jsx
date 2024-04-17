@@ -26,8 +26,7 @@ function RecArticleCard({ articleId, title, text, bias, keywords }) {
     4: "right",
   };
 
-  console.log(keywords);
-  // // Convert keyword string into list
+  // Convert keyword string into list
   keywords = keywords.replace(/'/g, '"');
   keywords = JSON.parse(keywords);
   return (
@@ -36,13 +35,15 @@ function RecArticleCard({ articleId, title, text, bias, keywords }) {
         <Card>
           <CardHeader>
             <LinkOverlay href={`/recommendation/${articleId}`}>
-              <Heading size="md">{title}</Heading>
+              <Heading size="md" noOfLines={2}>
+                {title}
+              </Heading>
             </LinkOverlay>
             <Badge color={cardColors[bias]}>{biasNames[bias]}</Badge>
           </CardHeader>
 
           <CardBody>
-            <Text>{text}</Text>
+            <Text noOfLines={2}>{text}</Text>
 
             {keywords && keywords.map((keyword) => <Tag>{keyword}</Tag>)}
           </CardBody>
