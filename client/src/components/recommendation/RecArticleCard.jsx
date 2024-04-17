@@ -25,6 +25,11 @@ function RecArticleCard({ articleId, title, text, bias, keywords }) {
     3: "center-right",
     4: "right",
   };
+
+  console.log(keywords);
+  // // Convert keyword string into list
+  keywords = keywords.replace(/'/g, '"');
+  keywords = JSON.parse(keywords);
   return (
     <>
       <LinkBox as="article" maxW="sm" p="2" borderWidth="0px" rounded="md">
@@ -39,9 +44,7 @@ function RecArticleCard({ articleId, title, text, bias, keywords }) {
           <CardBody>
             <Text>{text}</Text>
 
-            {keywords.map((keyword) => (
-              <Tag>{keyword}</Tag>
-            ))}
+            {keywords && keywords.map((keyword) => <Tag>{keyword}</Tag>)}
           </CardBody>
         </Card>
       </LinkBox>

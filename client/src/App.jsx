@@ -13,6 +13,7 @@ import ArticleGallery, {
 import RecommendationGallery, {
   loader as recommendationLoader,
 } from "./components/recommendation/RecommendationGallery";
+
 import ArticleContent, {
   loader as articleContentLoader,
 } from "./components/content/ArticleContent";
@@ -35,7 +36,6 @@ const router = createBrowserRouter([
     element: <ArticleGallery />,
     loader: articleLoader,
   },
-
   {
     path: "/recommendation/:articleId",
     element: <RecommendationGallery />,

@@ -11,6 +11,8 @@ import {
   Heading,
   LinkBox,
   LinkOverlay,
+  Button,
+  Link,
 } from "@chakra-ui/react";
 
 function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
@@ -31,7 +33,7 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
 
   // Convert keyword string into list
   keywords = keywords.replace(/'/g, '"');
-  keywords = JSON.parse(keywords);
+  keywords = JSON.parse(keywords).slice(0, 3);
 
   return (
     <>
@@ -39,17 +41,30 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
         <Card>
           <CardHeader>
             <LinkOverlay href={`/recommendation/${articleId}`}>
-              <Heading size="md">{title}</Heading>
+              <Heading size="md" noOfLines={2}>
+                {title}
+              </Heading>
             </LinkOverlay>
             <Badge color={cardColors[bias]}>{biasNames[bias]}</Badge>
           </CardHeader>
 
           <CardBody>
-            <Text>{text}...</Text>
+            <Text noOfLines={2} marginBottom={"10px"}>
+              {text}...
+            </Text>
 
-            {keywords.map((keyword) => (
-              <Tag>{keyword}</Tag>
-            ))}
+            <div paddingBottom={"10px"}>
+              {keywords.map((keyword) => (
+                <Tag marginRight={"5px"}>{keyword}</Tag>
+              ))}
+            </div>
+            <br />
+
+            {/* <LinkOverlay > */}
+            <Button size={"sm"} colorScheme={"teal"}>
+              <Link href={`/article-content/${articleId}`}>Read Article</Link>
+            </Button>
+            {/* </LinkOverlay> */}
           </CardBody>
         </Card>
       </LinkBox>

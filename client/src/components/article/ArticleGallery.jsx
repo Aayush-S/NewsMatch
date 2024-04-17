@@ -17,7 +17,7 @@ function ArticleGallery({ params }) {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5000/articles/${articleId}/50`)
+      .get(`http://127.0.0.1:5000/articles/cluster/${articleId}/50`)
       .then((response) => {
         const res = response.data;
         setArticles(res);
@@ -31,16 +31,20 @@ function ArticleGallery({ params }) {
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
       >
         {articles &&
-          articles.map((article, i) => (
-            <ArticleCard
-              articleId={i}
-              title={article.Title}
-              text={article.Text.substring(0, 60)}
-              bias={article.Bias}
-              keywords={article.Keywords}
-              cluster_tags={article["Cluster Tags"]}
-            />
-          ))}
+          articles.map((article, i) => {
+            console.log(article);
+            return (
+              <ArticleCard
+                key={i}
+                articleId={article.article_id}
+                title={article.Title}
+                text={article.Text}
+                bias={article.Bias}
+                keywords={article.Keywords}
+                cluster_tags={article["Cluster Tags"]}
+              />
+            );
+          })}
       </SimpleGrid>
     </>
   );
