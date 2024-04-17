@@ -3,13 +3,15 @@ import axios from "axios";
 import _, { random } from "lodash";
 
 import { useLoaderData } from "react-router-dom";
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, Heading } from "@chakra-ui/react";
 
 import ArticleCard from "../article/ArticleCard";
 
 export function loader({ params }) {
   const articleId = params.articleId;
-  return articleId;
+  const clusterId = params.clusterId;
+  const biasLevel = params.biasLevel;
+  return { articleId, clusterId, biasLevel };
 }
 
 function RecommendationGallery({ params }) {
@@ -17,7 +19,7 @@ function RecommendationGallery({ params }) {
   const [similarArticles, setSimilarArticles] = useState([]);
   const [differentArticles, setDifferentArticles] = useState([]);
 
-  const articleId = useLoaderData();
+  const { articleId, clusterId, biasLevel } = useLoaderData();
 
   useEffect(() => {
     axios
@@ -26,9 +28,6 @@ function RecommendationGallery({ params }) {
         const res = response.data;
         setSelectedArticle(res);
       });
-
-    const clusterId = 0;
-    const biasLevel = 0;
 
     axios.get(`http://127.0.0.1:5000/bias/${clusterId}/5`).then((response) => {
       const res = response.data;
@@ -46,10 +45,11 @@ function RecommendationGallery({ params }) {
 
   return (
     <div>
-      <h1>RECOMMENDATION PAGE {articleId} </h1>
       <Grid templateColumns="repeat(3, 1fr)" gap={6}>
         <GridItem w="100%" h="10">
-          <h1>Similar Articles</h1>
+          <Heading size={"md"} padding={"7px"} marginTop={"20px"}>
+            Similar Articles
+          </Heading>
           {similarArticles &&
             similarArticles.map((article) => (
               <ArticleCard
@@ -62,7 +62,9 @@ function RecommendationGallery({ params }) {
             ))}
         </GridItem>
         <GridItem w="100%" h="10">
-          <h1>Selected Article</h1>
+          <Heading size={"md"} padding={"7px"} marginTop={"20px"}>
+            Selected Article
+          </Heading>
           {selectedArticle && (
             <ArticleCard
               articleId={selectedArticle.article_id}
@@ -74,7 +76,9 @@ function RecommendationGallery({ params }) {
           )}
         </GridItem>
         <GridItem w="100%" h="10">
-          <h1>Different Articles</h1>
+          <Heading size={"md"} padding={"7px"} marginTop={"20px"}>
+            Different Articles
+          </Heading>
           {differentArticles.map((article) => (
             <ArticleCard
               articleId={article.article_id}

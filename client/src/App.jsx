@@ -32,12 +32,12 @@ const router = createBrowserRouter([
     element: <ClusterGallery />,
   },
   {
-    path: "/articles/:articlesId",
+    path: "/articles/:clusterId",
     element: <ArticleGallery />,
     loader: articleLoader,
   },
   {
-    path: "/recommendation/:articleId",
+    path: "/recommendation/:clusterId/:biasLevel/:articleId",
     element: <RecommendationGallery />,
     loader: recommendationLoader,
   },

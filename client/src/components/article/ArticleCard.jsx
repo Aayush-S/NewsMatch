@@ -15,7 +15,14 @@ import {
   Link,
 } from "@chakra-ui/react";
 
-function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
+function ArticleCard({
+  articleId,
+  title,
+  text,
+  bias,
+  keywords,
+  selectedCluster,
+}) {
   const cardColors = {
     0: "#4B3CE1",
     1: "#8379E0",
@@ -40,7 +47,9 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
       <LinkBox as="article" maxW="sm" p="2" borderWidth="0px" rounded="md">
         <Card>
           <CardHeader>
-            <LinkOverlay href={`/recommendation/${articleId}`}>
+            <LinkOverlay
+              href={`/recommendation/${selectedCluster}/${bias}/${articleId}`}
+            >
               <Heading size="md" noOfLines={2}>
                 {title}
               </Heading>

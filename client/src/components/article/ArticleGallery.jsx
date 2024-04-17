@@ -6,18 +6,18 @@ import ArticleCard from "./ArticleCard";
 import { SimpleGrid } from "@chakra-ui/react";
 
 export function loader({ params }) {
-  const articleId = params.articlesId;
-  return articleId;
+  const clusterId = params.clusterId;
+  return clusterId;
 }
 
 function ArticleGallery({ params }) {
   const [articles, setArticles] = useState(null);
 
-  const articleId = useLoaderData();
+  const clusterId = useLoaderData();
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5000/articles/cluster/${articleId}/50`)
+      .get(`http://127.0.0.1:5000/articles/cluster/${clusterId}/50`)
       .then((response) => {
         const res = response.data;
         setArticles(res);
@@ -41,7 +41,7 @@ function ArticleGallery({ params }) {
                 text={article.Text}
                 bias={article.Bias}
                 keywords={article.Keywords}
-                cluster_tags={article["Cluster Tags"]}
+                selectedCluster={clusterId}
               />
             );
           })}
