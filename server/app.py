@@ -83,9 +83,12 @@ def get_articles_in_cluster(clusterId=0, limit=50):
     return jsonify([dict(article) for article in articles])
 
 
+
+
 @app.route('/bias/<clusterId>/<limit>')
-@cross_origin
-def get_biased_articles_by_cluster(clusterId=0, limit=5):
+@cross_origin()
+def get_biased_articles_by_cluster(clusterId=0, limit=15):
+
     conn = get_db_connection()
     conn = conn.cursor()
     conn.execute("""
@@ -161,8 +164,6 @@ def get_histogram_data():
             "data": bias_counts,
         })
     conn.close()
-
-    print(histogram_data)
 
     return jsonify(histogram_data)
 
