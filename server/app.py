@@ -35,7 +35,24 @@ def get_articles():
 
     return jsonify([dict(article) for article in articles])
 
-
+"""
+cluster_tags = [
+    "Political and Social Issues",
+    "Community Involvement",
+    "Names, Organizations, and Various Terms",
+    "Locations",
+    "Misc. Adjectives",
+    "Legal and Law Enforcement",
+    "Science and Medicine",
+    "Noise/Nonsensical Phrases",
+    "Media and Entertainment",
+    "Various Phrases/Verbs",
+    "Nature and Wildlife",
+    "Food",
+    "Finance and Economics",
+    "Objects and Accessories",
+]
+"""
 # GET Articles of a given cluster
 @app.route('/articles/<clusterId>/<limit>')
 @cross_origin()
@@ -66,47 +83,42 @@ def get_articles_in_cluster(clusterId=0, limit=50):
     return jsonify([dict(article) for article in articles])
 
 
-# # GET Articles of a given cluster by name of the tag
-# @app.route('/articles/<clusterId>')
-# @cross_origin()
-# def get_articles_in_cluster(clusterId=0, limit=10):
+@app.route('/bias/<clusterId>/<limit>')
+@cross_origin
+def get_biased_articles_by_cluster(clusterId=0, limit=5):
+    conn = get_db_connection()
+    conn = conn.cursor()
+    conn.execute("""
+        SELECT cluster_name from clusters where cluster_id = ?;
+                 """, (clusterId,)
+    )
+    cluster_tags = conn.fetchall()
+    if len(cluster_tags) != 1:
+        print("wrong number of tags returned!")
+        return None
+    tag_name = cluster_tags[0][0]
+    print("tag_name", tag_name)
+    tag_name = "%" + tag_name + "%"
+    outputs = {}
+    for bias in range(5):
+        bias_str = str(bias)
+        conn.execute(
+            f"""SELECT *
+                FROM articles
+                WHERE [Cluster Tags] like ? and bias = ? limit ?;""", (tag_name,bias_str,limit,)
+        )
+        articles = conn.fetchall()
+        articles = [dict(article) for article in articles]
+        outputs[bias_str] = articles
+    conn.close()
 
-#     print(clusterId)
-
-#     conn = get_db_connection()
-#     conn = conn.cursor()
-#     # conn.execute("SELECT * FROM articles")
-#     conn.execute(
-#         f"""SELECT *
-#             FROM articles
-#             WHERE [Cluster Tags] REGEXP '\\b{clusterId}\\b';"""
-#     )
-#     articles = conn.fetchall()
-#     conn.close()
-
-#     return jsonify([dict(article) for article in articles])
+    return jsonify(outputs)
 
 
 # GET histogram
 @app.route('/histogram')
 @cross_origin()
 def get_histogram_data():
-    # cluster_tags = [
-    #     "Political and Social Issues",
-    #     "Community Involvement",
-    #     "Names, Organizations, and Various Terms",
-    #     "Locations",
-    #     "Misc. Adjectives",
-    #     "Legal and Law Enforcement",
-    #     "Science and Medicine",
-    #     "Noise/Nonsensical Phrases",
-    #     "Media and Entertainment",
-    #     "Various Phrases/Verbs",
-    #     "Nature and Wildlife",
-    #     "Food",
-    #     "Finance and Economics",
-    #     "Objects and Accessories",
-    # ]
     conn = get_db_connection()
     conn = conn.cursor()
     conn.execute(
