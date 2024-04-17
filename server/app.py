@@ -35,6 +35,21 @@ def get_articles():
 
     return jsonify([dict(article) for article in articles])
 
+# GET Article by id
+@app.route('/articles/<articleId>')
+@cross_origin()
+def get_article_by_id(articleId=0):
+    print(articleId)
+
+    conn = get_db_connection()
+    conn = conn.cursor()
+    conn.execute(f'SELECT * FROM articles WHERE "article_id" = {articleId};')
+    article = conn.fetchall()
+    conn.close()
+    
+    return jsonify(dict(article[0]))
+     
+
 """
 cluster_tags = [
     "Political and Social Issues",
@@ -54,7 +69,7 @@ cluster_tags = [
 ]
 """
 # GET Articles of a given cluster
-@app.route('/articles/<clusterId>/<limit>')
+@app.route('/articles/cluster/<clusterId>/<limit>')
 @cross_origin()
 def get_articles_in_cluster(clusterId=0, limit=50):
 
@@ -81,9 +96,6 @@ def get_articles_in_cluster(clusterId=0, limit=50):
     conn.close()
 
     return jsonify([dict(article) for article in articles])
-
-
-
 
 @app.route('/bias/<clusterId>/<limit>')
 @cross_origin()
