@@ -45,7 +45,7 @@ function ArticleCard({ articleId, title, text, bias, keywords, cluster_tags }) {
           </CardHeader>
 
           <CardBody>
-            <Text>{text}</Text>
+            <Text>{text}...</Text>
 
             {keywords.map((keyword) => (
               <Tag>{keyword}</Tag>

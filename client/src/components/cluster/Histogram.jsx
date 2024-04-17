@@ -4,10 +4,18 @@ import * as d3 from "d3";
 function Histogram({ data }) {
   const d3Container = useRef(null);
 
+  const colors = {
+    0: "#3a29f2",
+    1: "#8379E0",
+    2: "#C3D2E0",
+    3: "#E17468",
+    4: "#E03826",
+  };
+
   useEffect(() => {
     if (data && d3Container.current) {
-      let margin = { top: 30, right: 30, bottom: 70, left: 60 },
-        width = 460 - margin.left - margin.right,
+      let margin = { top: 30, right: 30, bottom: 70, left: 50 },
+        width = 430 - margin.left - margin.right,
         height = 250 - margin.top - margin.bottom;
 
       const svg = d3
@@ -32,13 +40,26 @@ function Histogram({ data }) {
         .append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .selectAll("text");
 
+      let ymax = Math.max(...data.map((d) => d[1]));
       // Add Y axis
-      var y = d3.scaleLinear().domain([0, 300]).range([height, 0]);
-      svg.append("g").call(d3.axisLeft(y));
+      var y = d3
+        .scaleLinear()
+        .domain([0, ymax + 0.1 * ymax])
+        .range([height, 0]);
+
+      // Add Y Axis label
+      svg
+        .append("g")
+        .call(d3.axisLeft(y))
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("dy", "-35")
+        .attr("x", "-40")
+        .style("text-anchor", "end")
+        .text("Num Articles")
+        .attr("fill", "black");
 
       // Bars
       svg
@@ -56,7 +77,7 @@ function Histogram({ data }) {
         .attr("height", function (d) {
           return height - y(d[1]);
         })
-        .attr("fill", "#69b3a2");
+        .attr("fill", (d, i) => colors[i]); // "#69b3a2");
     }
   }, [data]);
 

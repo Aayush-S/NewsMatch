@@ -10,14 +10,14 @@ export function loader({ params }) {
   return articleId;
 }
 
-function Article({ params }) {
+function ArticleGallery({ params }) {
   const [articles, setArticles] = useState(null);
 
   const articleId = useLoaderData();
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:5000/articles/${articleId}`)
+      .get(`http://127.0.0.1:5000/articles/${articleId}/50`)
       .then((response) => {
         const res = response.data;
         setArticles(res);
@@ -35,7 +35,7 @@ function Article({ params }) {
             <ArticleCard
               articleId={i}
               title={article.Title}
-              text={article.Text.substring(0, 50)}
+              text={article.Text.substring(0, 60)}
               bias={article.Bias}
               keywords={article.Keywords}
               cluster_tags={article["Cluster Tags"]}
@@ -46,4 +46,4 @@ function Article({ params }) {
   );
 }
 
-export default Article;
+export default ArticleGallery;
