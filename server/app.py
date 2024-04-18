@@ -3,6 +3,11 @@ from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 import re
 
+# ML Libraries
+import torch
+from torch import cuda
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
 app = Flask(__name__)
 
 cors = CORS(app)
@@ -53,7 +58,7 @@ def get_article_by_id(articleId=0):
     conn.execute(f'SELECT * FROM articles WHERE "article_id" = {articleId} LIMIT 1;')
     article = conn.fetchall()
     conn.close()
-    
+
     return jsonify(dict(article[0]))
      
 
@@ -183,6 +188,64 @@ def get_histogram_data():
     conn.close()
 
     return jsonify(histogram_data)
+
+
+
+## ML MODEL LOADING
+def init_model(model_name: str, device: str='cpu') -> AutoModelForSequenceClassification:
+    model = AutoModelForSequenceClassification.from_pretrained(model_name).to(device)
+    for param in model.parameters():
+        param.requires_grad = False
+    model.eval()
+    print("Model\n", model)
+    return model
+
+def init_tokenizer(tok_name: str) -> AutoTokenizer:
+    tokenizer = AutoTokenizer.from_pretrained(tok_name)
+    print("Tokenizer\n", tokenizer)
+    return tokenizer
+
+def classify_text(model: AutoModelForSequenceClassification, tokenizer: AutoTokenizer, text: str, device: str='cpu') -> int:
+    tokens = tokenizer(text, return_tensors='pt', truncation=True, padding='max_length')
+    input_ids = tokens['input_ids'].to(device)
+    attention_mask = tokens['attention_mask'].to(device)
+    outputs = model(input_ids, attention_mask=attention_mask)
+    pred_score, pred_label = torch.max(outputs.logits, dim=1)
+    prediction = pred_label.flatten().cpu().detach().item()
+    return prediction
+
+
+
+
+
+@app.route('/custom-article-classification')
+@cross_origin()
+def classify_custom_article():
+
+    model_name = "./distilbert_chkpt_9"
+    tokenizer_name = "distilbert-base-uncased" # huggingface tokenizer name
+    text_to_classify = "hello there" # text to classify
+
+    text_to_classify = '''A Florida university will honor Trayvon Martin with a posthumous Bachelor of Science Degree in Aviation republicans are angry and upset bad words qanon joe biden'''
+    # get cpu or gpu
+    device = 'cuda' if cuda.is_available() else 'cpu'
+    print(f"Device: {device}")
+
+    # load model and tokenizer
+    model = init_model(model_name, device=device)
+    tokenizer = init_tokenizer(tokenizer_name)
+
+    # predict bias
+    predicted_class = classify_text(model, tokenizer, text_to_classify, device=device)
+    print(f"Prediction: {predicted_class}")
+
+    return jsonify(predicted_class)
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

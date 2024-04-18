@@ -5,7 +5,7 @@ import _, { random } from "lodash";
 import { useLoaderData } from "react-router-dom";
 import { Grid, GridItem, Heading } from "@chakra-ui/react";
 
-import ArticleCard from "../article/ArticleCard";
+import RecArticleCard from "./RecArticleCard";
 
 export function loader({ params }) {
   const articleId = params.articleId;
@@ -52,12 +52,13 @@ function RecommendationGallery({ params }) {
           </Heading>
           {similarArticles &&
             similarArticles.map((article) => (
-              <ArticleCard
+              <RecArticleCard
                 articleId={article.article_id}
                 title={article.Title}
                 text={article.Text}
                 bias={article.Bias}
                 keywords={article.Keywords}
+                selectedCluster={clusterId}
               />
             ))}
         </GridItem>
@@ -66,12 +67,13 @@ function RecommendationGallery({ params }) {
             Selected Article
           </Heading>
           {selectedArticle && (
-            <ArticleCard
+            <RecArticleCard
               articleId={selectedArticle.article_id}
               title={selectedArticle.Title}
               text={selectedArticle.Text}
               bias={selectedArticle.Bias}
               keywords={selectedArticle.Keywords}
+              selectedCluster={clusterId}
             />
           )}
         </GridItem>
@@ -80,12 +82,13 @@ function RecommendationGallery({ params }) {
             Different Articles
           </Heading>
           {differentArticles.map((article) => (
-            <ArticleCard
+            <RecArticleCard
               articleId={article.article_id}
               title={article.Title}
               text={article.Text}
               bias={article.Bias}
               keywords={article.Keywords}
+              selectedCluster={clusterId}
             />
           ))}
         </GridItem>
