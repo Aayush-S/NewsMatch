@@ -1,0 +1,10 @@
+Flask
+Flask-Cors==4.0.
+numpy
+scikit-learn
+scipy==1.9.1
+spacy==3.7.2
+tokenize-rt==5.2.0
+tokenizers==0.14.1
+torch==2.1.0
+transformers==4.35.0
