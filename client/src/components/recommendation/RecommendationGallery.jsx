@@ -59,6 +59,7 @@ function RecommendationGallery({ params }) {
                 bias={article.Bias}
                 keywords={article.Keywords}
                 selectedCluster={clusterId}
+                numLines={2}
               />
             ))}
         </GridItem>
@@ -74,6 +75,7 @@ function RecommendationGallery({ params }) {
               bias={selectedArticle.Bias}
               keywords={selectedArticle.Keywords}
               selectedCluster={clusterId}
+              numLines={20}
             />
           )}
         </GridItem>
@@ -89,6 +91,7 @@ function RecommendationGallery({ params }) {
               bias={article.Bias}
               keywords={article.Keywords}
               selectedCluster={clusterId}
+              numLines={2}
             />
           ))}
         </GridItem>

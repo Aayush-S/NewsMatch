@@ -17,6 +17,9 @@ import RecommendationGallery, {
 import ArticleContent, {
   loader as articleContentLoader,
 } from "./components/content/ArticleContent";
+import RecCustomGallery, {
+  loader as customRecLoader,
+} from "./components/recommendation/RecCustomGallery";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +43,11 @@ const router = createBrowserRouter([
     path: "/recommendation/:clusterId/:biasLevel/:articleId",
     element: <RecommendationGallery />,
     loader: recommendationLoader,
+  },
+  {
+    path: "/custom-article/:biasLevel",
+    element: <RecCustomGallery />,
+    loader: customRecLoader,
   },
   {
     path: "/article-content/:articleId",

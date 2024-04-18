@@ -24,10 +24,10 @@ function Home() {
 
           <Button>
             <ChakraLink color="teal.500" as={ReactRouterLink} to={`/cluster`}>
-              Select from our Corpus
+              Get Started
             </ChakraLink>
           </Button>
-          <Button>
+          {/* <Button>
             <ChakraLink
               color="teal.500"
               as={ReactRouterLink}
@@ -35,7 +35,7 @@ function Home() {
             >
               Submit Custom Article
             </ChakraLink>
-          </Button>
+          </Button> */}
         </VStack>
       </Center>
     </>

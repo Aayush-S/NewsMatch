@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 import re
 
@@ -7,6 +7,13 @@ import re
 import torch
 from torch import cuda
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import spacy
+import networkx as nx
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+nltk.download('stopwords')
 
 app = Flask(__name__)
 
@@ -141,6 +148,38 @@ def get_biased_articles_by_cluster(clusterId=0, limit=5):
     return jsonify(outputs)
 
 
+@app.route('/bias-all/<biasLevel>/<limit>')
+@cross_origin()
+def get_all_biased_articles(biasLevel=0, limit=5):
+    conn = get_db_connection()
+    conn = conn.cursor()
+
+    outputs = {}
+    conn.execute(
+        f"""SELECT *
+            FROM articles
+            WHERE bias = ? 
+            ORDER BY RANDOM() 
+            LIMIT ?;""", (biasLevel, limit,)
+    )
+    articles = conn.fetchall()
+    articles = [dict(article) for article in articles]
+
+    outputs["similar"] = articles
+    conn.execute(
+        f"""SELECT *
+            FROM articles
+            WHERE bias != ? 
+            ORDER BY RANDOM() 
+            LIMIT ?;""", (biasLevel, limit,)
+    )
+    articlesDiff = conn.fetchall()
+    articlesDiff = [dict(article) for article in articlesDiff]
+    outputs["different"] = articlesDiff
+    conn.close()
+
+    return jsonify(outputs)
+
 # GET histogram
 @app.route('/histogram')
 @cross_origin()
@@ -215,21 +254,48 @@ def classify_text(model: AutoModelForSequenceClassification, tokenizer: AutoToke
     return prediction
 
 
+def preprocess_text(nlp, text): # Preprocesses text by removing stopwords and punctuation.
+    doc = nlp(text)
+    clean_text = ' '.join(token.lemma_ for token in doc if not token.is_stop and not token.is_punct)
+    
+    clean_text = re.sub(r'[^\w\s]', '', clean_text).lower()
+    
+    return clean_text
 
+def position_rank(tokens, window_size=5):
+    graph = nx.Graph()
+    for i, token in enumerate(tokens):
+        for j in range(i + 1, min(i + window_size, len(tokens))):
+            if not graph.has_edge(token, tokens[j]):
+                graph.add_edge(token, tokens[j], weight=0)
+            graph[token][tokens[j]]['weight'] += 1
 
+    scores = nx.pagerank(graph)
+    return scores
 
-@app.route('/custom-article-classification')
+@app.route('/custom-article-classification', methods=["POST"])
 @cross_origin()
 def classify_custom_article():
 
+    data = request.form
+
+    # print("#########################################################")
+    # print()
+
+    title = data.getlist('title')[0]
+    text_to_classify = data.getlist('text')[0]
+    # print(title)
+    # print(text_to_classify)
+
+    
+
+    ## Bias Classification
     model_name = "./distilbert_chkpt_9"
     tokenizer_name = "distilbert-base-uncased" # huggingface tokenizer name
-    text_to_classify = "hello there" # text to classify
 
-    text_to_classify = '''A Florida university will honor Trayvon Martin with a posthumous Bachelor of Science Degree in Aviation republicans are angry and upset bad words qanon joe biden'''
+    # text_to_classify = '''A Florida university will honor Trayvon Martin with a posthumous Bachelor of Science Degree in Aviation republicans are angry and upset bad words qanon joe biden'''
     # get cpu or gpu
     device = 'cuda' if cuda.is_available() else 'cpu'
-    print(f"Device: {device}")
 
     # load model and tokenizer
     model = init_model(model_name, device=device)
@@ -237,15 +303,48 @@ def classify_custom_article():
 
     # predict bias
     predicted_class = classify_text(model, tokenizer, text_to_classify, device=device)
-    print(f"Prediction: {predicted_class}")
+    # print(f"Prediction: {predicted_class}")
 
-    return jsonify(predicted_class)
+    
+    ## Keyword (topic) Clustering
+
+    # Get keywords
+    
+    nlp = spacy.load("en_core_web_sm")
+    preprocess_text(nlp, text_to_classify)
+
+    stop_words = set(stopwords.words('english'))
+
+    # Tokenize the text
+    tokens = word_tokenize(text_to_classify)
+
+    # Remove stopwords
+    filtered_tokens = [word for word in tokens if word not in stop_words]
+
+    # Perform keyword extraction using PositionRank
+    keywords = position_rank(filtered_tokens)
+
+    # Sort the keywords by score
+    sorted_keywords = sorted(keywords.items(), key=lambda x: x[1], reverse=True)
+
+    num_keywords = 5 #top 5 keywords
+    top_keywords = [keyword for keyword, score in sorted_keywords[:num_keywords]]
+
+    str_keywords = str(top_keywords)
 
 
 
+    conn = get_db_connection()
+    conn = conn.cursor()
+    # conn.execute(f'SELECT * FROM articles WHERE "article_id" = {articleId} LIMIT 1;')
 
+    conn.execute(f''' INSERT INTO articles (Keywords, Title, Text, Bias)
+                 VALUES ({str_keywords}, {title}, "{text_to_classify}", {predicted_class})''')
+    article = conn.fetchall()
+    conn.close()
 
-
+    # return jsonify(predicted_class, top_keywords)
+    return jsonify({ "biasLevel" : predicted_class })
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

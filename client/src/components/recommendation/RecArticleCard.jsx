@@ -19,6 +19,7 @@ function RecArticleCard({
   bias,
   keywords,
   selectedCluster,
+  numLines,
 }) {
   const cardColors = {
     0: "#4B3CE1",
@@ -55,7 +56,7 @@ function RecArticleCard({
           </CardHeader>
 
           <CardBody>
-            <Text noOfLines={2} marginBottom={"10px"}>
+            <Text noOfLines={numLines} marginBottom={"10px"}>
               {text}...
             </Text>
 
@@ -67,7 +68,9 @@ function RecArticleCard({
             <br />
 
             <Button size={"sm"} colorScheme={"teal"}>
-              <Link href={`/article-content/${articleId}`}>Read Article</Link>
+              <Link href={`/article-content/${articleId}`}>
+                Read Full Article
+              </Link>
             </Button>
           </CardBody>
         </Card>

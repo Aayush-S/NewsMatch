@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 import {
   FormControl,
@@ -17,6 +18,16 @@ function SubmitArticle() {
     // TODO: Insert API Call
     // TODO: Route to next page based on data from API
     alert(`Title: ${articleTitle} & Article Text: ${articleText}`);
+
+    axios
+      .post("http://127.0.0.1:5000/custom-article-classification", {
+        title: articleTitle,
+        text: articleText,
+      })
+      .then((response) => {
+        const res = response.data;
+        this.props.history.push(`/custom-article/${res.biasLevel}`);
+      });
   };
   return (
     <>
