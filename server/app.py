@@ -10,8 +10,9 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 ################################################
 # make sure to insert the correct file name here
-FILE_NAME = "full_database.db"
+# FILE_NAME = "full_database.db"
 # FILE_NAME = "first_2000.db"
+FILE_NAME = "first_10k.db"
 ################################################
 
 def regexp(expr, item):
@@ -49,7 +50,7 @@ def get_article_by_id(articleId=0):
 
     conn = get_db_connection()
     conn = conn.cursor()
-    conn.execute(f'SELECT * FROM articles WHERE "article_id" = {articleId};')
+    conn.execute(f'SELECT * FROM articles WHERE "article_id" = {articleId} LIMIT 1;')
     article = conn.fetchall()
     conn.close()
     
