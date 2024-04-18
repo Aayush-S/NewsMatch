@@ -14,12 +14,10 @@ function ArticleContent({ title, content }) {
 
   //   const articleId = useLoaderData();
   useEffect(() => {
-    console.log("here");
     axios
       .get(`http://127.0.0.1:5000/articles/${articleId}`)
       .then((response) => {
         const res = response.data;
-        console.log(res);
         setData(res);
       });
   }, []);

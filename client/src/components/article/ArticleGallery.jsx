@@ -32,7 +32,6 @@ function ArticleGallery({ params }) {
       >
         {articles &&
           articles.map((article, i) => {
-            console.log(article);
             return (
               <ArticleCard
                 key={i}
