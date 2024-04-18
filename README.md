@@ -1,10 +1,10 @@
-# political-bias-viz
-Political Bias Visualization website for CSE 6242
+# NewsMatch
+NewsMatch: A Political Bias Recommendation and Visualization Website.
 
-## Setting up dataset
+## Setting up the Dataset
 1. If you only want to use the first 10k articles of the dataset, no setup is needed!
 
-If you want to download more of the dataset:
+If you want to download more of the dataset (*will run slower*):
 
 1. Download the *clustered_articles_100k.csv* file (or whichever size file you like) and add it to the server file.
 * If your file isn't called *clustered_articles_100k.csv*, then go into *setup.sql* and change line 14 to hold the name of your file.
@@ -13,6 +13,16 @@ If you want to download more of the dataset:
 * This command will take about 60 seconds to run. Confirm that the file *full_database.db* is now in the server folder.
 * Input the new database name in line 13 of *app.py*.
 
-## Running the backend
-1. Install dependencies (how to do this)
-2. Run the command 'python app.py'.
+## Running the Backend
+
+From the home directory, run the following commands:
+1. `cd server`
+2. `pip install -r requirements.txt`
+3. `python app.py`
+
+## Running the Frontend
+
+Open a new terminal and run the following commands:
+1. `cd client`
+2. `npm install`
+3. `npm start`
