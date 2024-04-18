@@ -11,5 +11,5 @@ CREATE TABLE clusters (
     cluster_name TEXT
 );
 .mode csv
-.import full_clustered_articles.csv articles
+.import clustered_articles_10k.csv articles
 .import clusters.csv clusters
