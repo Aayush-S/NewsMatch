@@ -7,13 +7,14 @@ app = Flask(__name__)
 
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+FILE_NAME = "full_database.db"
 
 def regexp(expr, item):
     reg = re.compile(expr)
     return reg.search(item) is not None
 
 def get_db_connection():
-    conn = sqlite3.connect('first_2000.db')
+    conn = sqlite3.connect(FILE_NAME)
     conn.create_function("REGEXP", 2, regexp)
     conn.row_factory = sqlite3.Row
     return conn
@@ -29,7 +30,7 @@ def get_articles():
 
     conn = get_db_connection()
     conn = conn.cursor()
-    conn.execute("SELECT * FROM articles")
+    conn.execute("SELECT * FROM articles limit 100;")
     articles = conn.fetchall()
     conn.close()
 
@@ -99,8 +100,7 @@ def get_articles_in_cluster(clusterId=0, limit=50):
 
 @app.route('/bias/<clusterId>/<limit>')
 @cross_origin()
-def get_biased_articles_by_cluster(clusterId=0, limit=15):
-
+def get_biased_articles_by_cluster(clusterId=0, limit=5):
     conn = get_db_connection()
     conn = conn.cursor()
     conn.execute("""
@@ -134,6 +134,7 @@ def get_biased_articles_by_cluster(clusterId=0, limit=15):
 @app.route('/histogram')
 @cross_origin()
 def get_histogram_data():
+    limit = 10
     conn = get_db_connection()
     conn = conn.cursor()
     conn.execute(
@@ -153,8 +154,6 @@ def get_histogram_data():
     .quit
     '''
 
-    # conn = sqlite3.connect('small.db')
-    # conn = conn.cursor()
     histogram_data = []
     for tag in cluster_tags:
         # print(tag[0])
@@ -169,8 +168,8 @@ def get_histogram_data():
         bias_names = ["Left", "Center Left", "Center","Center Right", "Right"]
         bias_counts = []
         for i in range(len(bias_names)):
-            if str(i) in d:
-                bias_counts.append((bias_names[i], d[str(i)]))
+            if i in d:
+                bias_counts.append((bias_names[i], d[i]))
         histogram_data.append({
             "tag": tag,
             "data": bias_counts,
