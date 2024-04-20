@@ -22,8 +22,8 @@ If you want to download more of the dataset (*will run slower*):
 5. Input the new database name in line 27 of `CODE/app/server/app.py`.
 
 ### Backend
-***INSERT INSTALL SQLITE3 INSTRUCTIONS*** \
-***CAN PIP INSTALLS BE RUN USING A PYTHON ENV OR CONDA OUT OF THE BOX? ARE THERE EXTRA STEPS NEEDED TO MAKE IT RUN***
+
+Ensure you have [Python](https://www.python.org/) installed. You can use a conda environment to install the required Python packages if desired.
 
 From the home directory, run the following commands: \
 *Note: it is recommended that this is run in a python or conda environment*
@@ -33,7 +33,8 @@ pip install -r requirements.txt
 ```
 
 ### Frontend
-***INSERT INSTALL NPM INSTRUCTIONS***
+
+Install the most recent [Node]((https://nodejs.org/en)) runtime.
 
 From the home directory, run the following commands:
 ```
@@ -51,6 +52,8 @@ cd CODE/app/server
 python app.py
 ```
 
+Now the backend is running on `http://127.0.0.1:5000`!
+
 ### Frontend
 
 Open a new terminal, and from the home directory, run the following commands:
@@ -60,7 +63,6 @@ npm install
 npm start
 ```
 
-***UPDATE URL IF WRONG, OTHERWISE REMOVE THIS MESSAGE*** \
 The app is now viewable in any browser at `http://localhost:3000`! To use our system, first select a topic, then select an article, and finally view recommendations. 
 
 # Files
