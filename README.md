@@ -1,6 +1,8 @@
 # NewsMatch
 NewsMatch: A Political Bias Recommendation and Visualization Website.
 
+We have built a system that clusters news topics by topic and determines their bias. Our visualization system makes it easy for users to see the distribution of different metadata across articles as well as find interesting articles for them to read. NewsMatch also provides users with recommendations for similar and different ideological articles to give different perspectives on a given topic.
+
 ## Setting up the Dataset
 1. If you only want to use the first 10k articles of the dataset, no setup is needed!
 
