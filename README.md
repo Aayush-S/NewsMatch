@@ -28,3 +28,7 @@ Open a new terminal and run the following commands:
 1. `cd client`
 2. `npm install`
 3. `npm start`
+
+
+
+To use our system, first select a topic, then select an article, and finally view recommendations! 
