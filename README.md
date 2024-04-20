@@ -64,11 +64,20 @@ npm start
 The app is now viewable in any browser at `http://localhost:3000`! To use our system, first select a topic, then select an article, and finally view recommendations. 
 
 # Files
-Below is a description of all of the important directories and files in this repository
-| Directory | Description |
-|-----------|-------------|
-| `pathToDir/dir` | description of dir |
+Below is a description of all of the important directories and files in this repository.
+| Directory | File | Description |
+|-----------|------|-------------|
+| `DOC` | - | folder containing project report and poster |
+| `CODE` | - | folder containing all project code |
+| `CODE/app` | - | folder containing the project app visualization |
+| `CODE/dev` | - | folder containing all data processing and model training code |
+| `CODE/dev/Bias_Classification` | - | folder containing data processing and model training code for classifying bias |
+| `CODE/dev/Bias_Classification` | `Process_Data.ipynb` | Google Colab notebook for pre-processing dataset |
+| `CODE/dev/Bias_Classification` | `Sklearn_Models.ipynb` | Google Colab notebook for training and saving sklearn models using processed dataset |
+| `CODE/dev/Bias_Classification/sklearn` | - | folder containing saved sklearn model checkpoints for various experiments<sup>1</sup> |
+| `CODE/dev/Bias_Classification` | `Fine_Tune.ipynb` | Google Colab notebook for fine-tuning and saving DistilBERT models using processed dataset |
+| `CODE/dev/Bias_Classification/fine_tune` | - | folder containing saved DistilBERT model checkpoints for various experiments<sup>2</sup> |
+| `pathTofile` | `file.file` | description of file |
 
-| File | Description |
-|------|-------------|
-| `pathToFile/file.file` | description of file |
+*<sup>1</sup>Provided model checkpoints are only for the last training epoch to reduce the size of this repository; however, each experiment folder contains a `logs.json` file containing training and validation metrics for all epochs* \
+*<sup>2</sup>Each experiment folder contains a `{EXPERIMENT_NAME}.txt` file containing a Google Drive link to the model checkpoints and `logs.json` file containing training and validation metrics for all epochs*
