@@ -12,14 +12,15 @@ If you only want to use the first 10k articles of the dataset, no setup is neede
 
 If you want to download more of the dataset (*will run slower*):
 
-1. Download the *clustered_articles_100k.csv* file (or whichever size file you like) from [here](https://drive.google.com/drive/folders/1kjbQ4NviL3I_tuPdivm5rQaS3NYefk5g?usp=sharing) and save the file to the `CODE/app/server` directory
-2. Add the CSV file to the server file by going into `CODE/app/server/setup.sql` and change line 14 to hold the name of your file
+1. Install the most recent [SQLite](https://www.sqlite.org/download.html) command-line tools
+2. Download the *clustered_articles_100k.csv* file (or whichever size file you like) from [here](https://drive.google.com/drive/folders/1kjbQ4NviL3I_tuPdivm5rQaS3NYefk5g?usp=sharing) and save the file to the `CODE/app/server` directory
+3. Add the CSV file to the server file by going into `CODE/app/server/setup.sql` and change line 14 to hold the name of your file
     * This step is already complete if you are using the *clustered_articles_100k.csv* file
-3. Open a terminal window and navigate to the `CODE/app/server` directory
-4. Run the command `sqlite3 full_database.db < setup.sql`
+4. Open a terminal window and navigate to the `CODE/app/server` directory
+5. Run the command `sqlite3 full_database.db < setup.sql`
     * For the *clustered_articles_100k.csv* file, this command will take about 60 seconds to run
-5. Confirm that the file *full_database.db* is now in the `CODE/app/server` directory
-5. Input the new database name in line 27 of `CODE/app/server/app.py`.
+6. Confirm that the file *full_database.db* is now in the `CODE/app/server` directory
+7. Input the new database name in line 27 of `CODE/app/server/app.py`.
 
 ### Backend
 
