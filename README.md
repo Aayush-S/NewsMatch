@@ -35,7 +35,7 @@ pip install -r requirements.txt
 
 ### Frontend
 
-Install the most recent [Node]((https://nodejs.org/en)) runtime.
+Install the most recent [Node](https://nodejs.org/en) runtime.
 
 From the home directory, run the following commands:
 ```
