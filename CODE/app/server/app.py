@@ -22,8 +22,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 ################################################
 # make sure to insert the correct file name here
-# FILE_NAME = "full_database.db"
-# FILE_NAME = "first_2000.db"
+# e.g. FILE_NAME = "full_database.db"
+#      FILE_NAME = "first_2000.db"
 FILE_NAME = "first_10k.db"
 ################################################
 
